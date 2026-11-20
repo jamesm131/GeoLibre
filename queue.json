@@ -4,43 +4,79 @@
   "base": "main",
   "open": [
     {
-      "number": 3544,
-      "branch": "feat/aprx-map-picker",
-      "title": "feat(arcgis): ask which map to import from a multi-map ArcGIS Pro project"
+      "number": 3552,
+      "branch": "fix/arcgis-regional-service-tokens",
+      "title": "fix(arcgis): send tokens to imported services on regional ArcGIS Online hosts",
+      "note": "Opened 2026-11-20 by the Review Geolibre PRs and Checks thread. Review findings dispatched 2026-11-21."
     },
     {
-      "number": 3545,
-      "branch": "feat/lyrx-style-import",
-      "title": "feat(style): import ArcGIS Pro .lyrx styles onto vector layers"
-    },
-    {
-      "number": 3548,
-      "branch": "feat/aprx-feature-services",
-      "title": "feat(arcgis): open hosted feature layers when importing ArcGIS Pro projects",
-      "note": "Adds a serviceLayerIndex parameter to importLayer and a feature-service branch in the services loop of handleImportArcgisProject. feat/aprx-file-gdb moves importLayer to a context object, so whichever lands second folds serviceLayerIndex into it."
+      "number": 3553,
+      "branch": "feat/arcgis-import-foundation",
+      "title": "refactor(arcgis): share one import session and layer order across project imports",
+      "note": "Opened 2026-11-20 by the Review Geolibre PRs and Checks thread. Base of the remaining stack; review fixes go on top as new commits (no force-push)."
     }
   ],
   "queued": [
     {
       "branch": "feat/aprx-file-gdb",
-      "title": "feat(arcgis): load File Geodatabase layers when importing ArcGIS Pro projects",
+      "title": "feat(arcgis): load File Geodatabase layers from ArcGIS Pro projects on desktop",
       "body": "bodies/feat-aprx-file-gdb.md",
-      "dependsOn": []
+      "dependsOn": [
+        "feat/arcgis-import-foundation"
+      ],
+      "note": "Rebased onto #3553 (b45a0ec5) at af229b74. If #3553 is squash-merged, rebase onto main first."
     },
     {
       "branch": "feat/arcgis-thematic-symbology",
-      "title": "feat(arcgis): keep thematic colours and class breaks when importing ArcGIS Pro projects",
+      "title": "feat(arcgis): import unique value and class breaks renderers as exact rules",
       "body": "bodies/feat-arcgis-thematic-symbology.md",
-      "dependsOn": [],
-      "note": "After #3545 merges, switch parseLyrx to the shared translateCimRenderer (follow-up noted in the body)."
+      "dependsOn": [
+        "feat/arcgis-import-foundation"
+      ],
+      "note": "Rebased onto #3553. The .lyrx switch to the shared CIM reader is now its own branch refactor/lyrx-shared-cim-reader, so no follow-up is due on this one."
     },
     {
       "branch": "feat/aprx-repair-workspaces",
-      "title": "feat(arcgis): locate moved data folders after importing an ArcGIS Pro project",
+      "title": "feat(arcgis): locate moved folders for unresolved ArcGIS Pro project layers",
       "body": "bodies/feat-aprx-repair-workspaces.md",
-      "dependsOn": [],
-      "note": "Branch is rebased on main after #3544 merged. A later Locate geodatabase change will depend on feat/aprx-file-gdb; whichever of the two lands second needs a rebase (importLayer context object, bottom-first layer order)."
+      "dependsOn": [
+        "feat/arcgis-import-foundation"
+      ],
+      "note": "Rebased onto #3553 at b277d104 (old version kept as backup/feat/aprx-repair-workspaces-3f7ad57a)."
+    },
+    {
+      "branch": "refactor/lyrx-shared-cim-reader",
+      "title": "refactor(style): build .lyrx import on the shared CIM reader",
+      "body": "bodies/refactor-lyrx-shared-cim-reader.md",
+      "dependsOn": [
+        "feat/arcgis-import-foundation",
+        "feat/arcgis-thematic-symbology"
+      ],
+      "note": "Follow-up to merged #3545. Body has #THEMATIC placeholders: replace with the thematic PR number before opening."
     }
   ],
-  "done": []
+  "done": [
+    {
+      "number": 3544,
+      "branch": "feat/aprx-map-picker",
+      "title": "feat(arcgis): ask which map to import from a multi-map ArcGIS Pro project",
+      "state": "merged",
+      "date": "2026-11-20"
+    },
+    {
+      "number": 3545,
+      "branch": "feat/lyrx-style-import",
+      "title": "feat(style): import ArcGIS Pro .lyrx styles onto vector layers",
+      "state": "merged",
+      "date": "2026-11-20"
+    },
+    {
+      "number": 3548,
+      "branch": "feat/aprx-feature-services",
+      "title": "feat(arcgis): open hosted feature layers when importing ArcGIS Pro projects",
+      "note": "Adds a serviceLayerIndex parameter to importLayer and a feature-service branch in the services loop of handleImportArcgisProject. feat/aprx-file-gdb moves importLayer to a context object, so whichever lands second folds serviceLayerIndex into it.",
+      "state": "merged",
+      "date": "2026-11-20"
+    }
+  ]
 }

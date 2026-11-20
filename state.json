@@ -1,4 +1,48 @@
 {
-  "lastRun": null,
-  "handled": {}
+  "lastRun": "2026-11-21",
+  "handled": {
+    "3552": {
+      "reviews": [
+        5999809057,
+        5999839271
+      ],
+      "reviewComments": [
+        4648070880
+      ],
+      "issueComments": [
+        7051345058,
+        7051358198,
+        7051382409,
+        7051578217
+      ],
+      "commits": [
+        "86ee8efa",
+        "a377f1fa"
+      ],
+      "dispatchedTo": "mcp:launch:cd7119401e335ca1dd3517b609e05f401f0dde5bdfb870d77796763639939b10"
+    },
+    "3553": {
+      "reviews": [
+        5999863296,
+        5999863531,
+        5999863821
+      ],
+      "reviewComments": [
+        4648115994,
+        4648116196,
+        4648116443
+      ],
+      "issueComments": [
+        7051426069,
+        7051445771,
+        7051461405
+      ],
+      "commits": [
+        "942f73ec",
+        "81182c2c",
+        "b45a0ec5"
+      ],
+      "dispatchedTo": "mcp:launch:ac135cda75700d5900a28296caa6e5113c5efcb495caf96ab832add9d6d492d6"
+    }
+  }
 }
