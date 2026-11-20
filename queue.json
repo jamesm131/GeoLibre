@@ -3,8 +3,16 @@
   "fork": "jamesm131/GeoLibre",
   "base": "main",
   "open": [
-    { "number": 3544, "branch": "feat/aprx-map-picker", "title": "feat(arcgis): ask which map to import from a multi-map ArcGIS Pro project" },
-    { "number": 3545, "branch": "feat/lyrx-style-import", "title": "feat(style): import ArcGIS Pro .lyrx styles onto vector layers" }
+    {
+      "number": 3544,
+      "branch": "feat/aprx-map-picker",
+      "title": "feat(arcgis): ask which map to import from a multi-map ArcGIS Pro project"
+    },
+    {
+      "number": 3545,
+      "branch": "feat/lyrx-style-import",
+      "title": "feat(style): import ArcGIS Pro .lyrx styles onto vector layers"
+    }
   ],
   "queued": [
     {
@@ -19,6 +27,13 @@
       "body": "bodies/feat-arcgis-thematic-symbology.md",
       "dependsOn": [],
       "note": "After #3545 merges, switch parseLyrx to the shared translateCimRenderer (follow-up noted in the body)."
+    },
+    {
+      "branch": "feat/aprx-repair-workspaces",
+      "title": "feat(arcgis): locate moved data folders after importing an ArcGIS Pro project",
+      "body": "bodies/feat-aprx-repair-workspaces.md",
+      "dependsOn": [],
+      "note": "Branch is rebased on main after #3544 merged. A later Locate geodatabase change will depend on feat/aprx-file-gdb; whichever of the two lands second needs a rebase (importLayer context object, bottom-first layer order)."
     }
   ],
   "done": []
