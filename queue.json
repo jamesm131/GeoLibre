@@ -12,6 +12,12 @@
       "number": 3545,
       "branch": "feat/lyrx-style-import",
       "title": "feat(style): import ArcGIS Pro .lyrx styles onto vector layers"
+    },
+    {
+      "number": 3548,
+      "branch": "feat/aprx-feature-services",
+      "title": "feat(arcgis): open hosted feature layers when importing ArcGIS Pro projects",
+      "note": "Adds a serviceLayerIndex parameter to importLayer and a feature-service branch in the services loop of handleImportArcgisProject. feat/aprx-file-gdb moves importLayer to a context object, so whichever lands second folds serviceLayerIndex into it."
     }
   ],
   "queued": [
