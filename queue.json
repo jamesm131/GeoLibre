@@ -1,0 +1,25 @@
+{
+  "upstream": "opengeos/GeoLibre",
+  "fork": "jamesm131/GeoLibre",
+  "base": "main",
+  "open": [
+    { "number": 3544, "branch": "feat/aprx-map-picker", "title": "feat(arcgis): ask which map to import from a multi-map ArcGIS Pro project" },
+    { "number": 3545, "branch": "feat/lyrx-style-import", "title": "feat(style): import ArcGIS Pro .lyrx styles onto vector layers" }
+  ],
+  "queued": [
+    {
+      "branch": "feat/aprx-file-gdb",
+      "title": "feat(arcgis): load File Geodatabase layers when importing ArcGIS Pro projects",
+      "body": "bodies/feat-aprx-file-gdb.md",
+      "dependsOn": []
+    },
+    {
+      "branch": "feat/arcgis-thematic-symbology",
+      "title": "feat(arcgis): keep thematic colours and class breaks when importing ArcGIS Pro projects",
+      "body": "bodies/feat-arcgis-thematic-symbology.md",
+      "dependsOn": [],
+      "note": "After #3545 merges, switch parseLyrx to the shared translateCimRenderer (follow-up noted in the body)."
+    }
+  ],
+  "done": []
+}
