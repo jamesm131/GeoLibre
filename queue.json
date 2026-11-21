@@ -4,27 +4,14 @@
   "base": "main",
   "open": [
     {
-      "number": 3552,
-      "branch": "fix/arcgis-regional-service-tokens",
-      "title": "fix(arcgis): send tokens to imported services on regional ArcGIS Online hosts",
-      "note": "Opened 2026-11-20 by the Review Geolibre PRs and Checks thread. Review findings dispatched 2026-11-21."
-    },
-    {
-      "number": 3553,
-      "branch": "feat/arcgis-import-foundation",
-      "title": "refactor(arcgis): share one import session and layer order across project imports",
-      "note": "Opened 2026-11-20 by the Review Geolibre PRs and Checks thread. Base of the remaining stack; review fixes go on top as new commits (no force-push)."
-    }
-  ],
-  "queued": [
-    {
       "branch": "feat/aprx-file-gdb",
       "title": "feat(arcgis): load File Geodatabase layers from ArcGIS Pro projects on desktop",
       "body": "bodies/feat-aprx-file-gdb.md",
       "dependsOn": [
         "feat/arcgis-import-foundation"
       ],
-      "note": "Rebased onto #3553 (b45a0ec5) at af229b74. If #3553 is squash-merged, rebase onto main first."
+      "note": "2026-11-22: thread rebasing onto main (after #3553 squash merge) and opening the PR.",
+      "opening": "mcp:launch:0dba86459be1dd637051fb63c7655a89cab899aa62b97d415e2cb0c2468eac35"
     },
     {
       "branch": "feat/arcgis-thematic-symbology",
@@ -33,8 +20,11 @@
       "dependsOn": [
         "feat/arcgis-import-foundation"
       ],
-      "note": "Rebased onto #3553. The .lyrx switch to the shared CIM reader is now its own branch refactor/lyrx-shared-cim-reader, so no follow-up is due on this one."
-    },
+      "note": "2026-11-22: thread rebasing onto main (after #3553 squash merge), opening the PR, and filling #THEMATIC in the lyrx body.",
+      "opening": "mcp:launch:3da29eac9d7a95b6b560a4f9637b2241884ee3890107803e32bd19881d338407"
+    }
+  ],
+  "queued": [
     {
       "branch": "feat/aprx-repair-workspaces",
       "title": "feat(arcgis): locate moved folders for unresolved ArcGIS Pro project layers",
@@ -42,7 +32,7 @@
       "dependsOn": [
         "feat/arcgis-import-foundation"
       ],
-      "note": "Rebased onto #3553 at b277d104 (old version kept as backup/feat/aprx-repair-workspaces-3f7ad57a)."
+      "note": "Still on the old #3553 base (b277d104); #3553 was squash-merged, so rebase --onto origin/main b45a0ec5 before opening."
     },
     {
       "branch": "refactor/lyrx-shared-cim-reader",
@@ -77,6 +67,22 @@
       "note": "Adds a serviceLayerIndex parameter to importLayer and a feature-service branch in the services loop of handleImportArcgisProject. feat/aprx-file-gdb moves importLayer to a context object, so whichever lands second folds serviceLayerIndex into it.",
       "state": "merged",
       "date": "2026-11-20"
+    },
+    {
+      "number": 3552,
+      "branch": "fix/arcgis-regional-service-tokens",
+      "title": "fix(arcgis): send tokens to imported services on regional ArcGIS Online hosts",
+      "note": "Opened 2026-11-20 by the Review Geolibre PRs and Checks thread. Review findings dispatched 2026-11-21.",
+      "state": "merged",
+      "date": "2026-11-21"
+    },
+    {
+      "number": 3553,
+      "branch": "feat/arcgis-import-foundation",
+      "title": "refactor(arcgis): share one import session and layer order across project imports",
+      "note": "Squash-merged as 7fc94a3c after giswqs added review-fix commits; stacked branches need rebase --onto origin/main.",
+      "state": "merged",
+      "date": "2026-11-21"
     }
   ]
 }
