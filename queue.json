@@ -21,7 +21,7 @@
       "dependsOn": [
         "feat/arcgis-import-foundation"
       ],
-      "note": "2026-11-22: opened as #3559 after rebasing onto main (head 63699228, was dda90cf4).",
+      "note": "2026-11-22: opened as #3559 after rebasing onto main. Review rounds done: head 39f3c74e, all 26 checks green, CodeRabbit approved, all threads resolved; waiting on maintainer review.",
       "opening": "mcp:launch:3da29eac9d7a95b6b560a4f9637b2241884ee3890107803e32bd19881d338407",
       "number": 3559
     }
