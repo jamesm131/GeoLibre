@@ -4,11 +4,11 @@ ArcGIS Pro projects (`.aprx`, `.mapx`) now keep their thematic symbology. A laye
 
 Supported renderer limitations produce per-layer warnings in the existing import warnings dialog, one per reason. Those notes describe a layer that did load, so they are not counted as "layers that could not be loaded". Neither is the existing map-extent note, which describes the view rather than a layer: on `main` a project whose only note was the extent said "1 layer could not be loaded". A report with only such notes now says the project is not shown exactly as in ArcGIS Pro (`countArcgisUnloadedLayers`). Point markers are still drawn as circles, but a marker of any other shape (a square, a star, a font glyph) now gets a `marker-shape` note saying so.
 
-CIM symbology reading now has one home, `packages/map/src/arcgis-cim-renderer.ts`, exported from `@geolibre/map/style-import` next to the SLD, QML and Mapbox style importers. The APRX importer uses it instead of its own `cimColor` copy, and a follow-up PR rebuilds the `.lyrx` importer merged in #3545 on it.
+CIM symbology reading now has one home, `packages/map/src/cim-renderer.ts`, exported from `@geolibre/map/style-import` next to the SLD, QML and Mapbox style importers. The APRX importer uses it instead of its own `cimColor` copy, and a follow-up PR rebuilds the `.lyrx` importer merged in #3545 on it.
 
 ## How it works
 
-Everything CIM-specific is in one pure module with no `maplibre-gl` import, `packages/map/src/arcgis-cim-renderer.ts`. `@geolibre/map/style-import` re-exports its public API, which the module header documents for CIM importers:
+Everything CIM-specific is in one pure module with no `maplibre-gl` import, `packages/map/src/cim-renderer.ts`. `@geolibre/map/style-import` re-exports its public API, which the module header documents for CIM importers:
 
 - `translateCimRenderer(renderer: unknown): CimRendererTranslation`, the entry point for a layer's `renderer`.
 - `translateCimSymbol(reference: unknown): CimRendererTranslation`, one `CIMSymbolReference` as a single-symbol style.
@@ -50,7 +50,8 @@ The APRX importer's `parseStyle` now just calls `translateCimRenderer` and turns
 - **Marker outlines scale as ArcGIS Pro draws them.** A vector marker with `scaleSymbolsProportionally` gives its graphic's stroke widths at the size of its `frame`, so the outline is scaled by the marker size over the frame height (a 1pt outline in a 10pt frame is 2pt on a 20pt marker). Without that flag, or without a readable frame, the width is used as written.
 - **Unreadable colours are reported, not replaced.** A solid fill or outline whose colour `cimColor` cannot read is left undrawn and reported (`color`): an unreadable fill behind a readable outline draws hollow, an unreadable outline draws no outline. Drawing it in an invented colour would pass for the real map. When nothing visible is left, the symbol is refused (`symbol`), as described above.
 - **No coloured edge on a class without an outline.** GeoLibre's polygon fill draws a 1px hairline in the stroke colour even at stroke width 0 (QGIS draws a width-0 outline as a 1px pen too), so a class without an outline, or with a fully transparent one, gets width 0 and its own fill colour as its outline colour, per rule where classes differ. The hairline then matches the edge MapLibre draws for any fill. GeoLibre's general meaning of width 0 is unchanged. Exported to QML, that width-0 outline becomes QGIS's 1px pen in the fill colour, but at the stroke opacity rather than the fill's, so a translucent fill gets an opaque edge (true of every width-0 export, not only imported ones).
-- **QML export of imported classes is not supported yet.** The class filters use `in`, `to-string`, `to-number` and `typeof` so values compare as ArcGIS does; the QML exporter cannot translate those expressions, so it skips each class rule with a warning and keeps only the catch-all rule. When no rule exports and the catch-all is off (class breaks without a default), `buildQml` now exports a single symbol, as it already did for categorised and graduated styles, rather than a QML that draws nothing, with a warning that the single symbol draws every feature (QGIS cannot express the class filters, so neither output matches the map). A style whose only rule is a switched-off catch-all still exports as drawing nothing, as on the map. The map, legend and `.geolibre` project files are unaffected.
+- **QML export of imported classes is not supported yet.** The class filters use `in`, `to-string`, `to-number` and `typeof` so values compare as ArcGIS does; the QML exporter cannot translate those expressions, so it skips each class rule with a warning and keeps only the catch-all rule. When no rule exports and the catch-all is off (class breaks without a default), `buildQml` now exports a single symbol, as it already did for categorised and graduated styles, rather than a QML that draws nothing, with a warning that the single symbol draws every feature (QGIS cannot express the class filters, so neither output matches the map). The fallback applies only when a skipped rule is one the map draws (it and its ancestors switched on); when every skipped rule is switched off, or the only rule is a switched-off catch-all, the export keeps the empty tree, which draws nothing, as on the map. The map, legend and `.geolibre` project files are unaffected.
+- **Why `cim-renderer.ts`, not `arcgis-*`.** The `no-cross-engine-imports` lint rule treats `arcgis-*` files in `packages/map/src` as code for the ArcGIS map engine. This module reads a file format any engine can use, so it has a neutral name.
 - **Why `@geolibre/map/style-import`.** Every other style importer (SLD, QML, Mapbox, and #3545's `.lyrx`) lives there, the entry point stays free of `maplibre-gl` so `node --test` can load it, and the desktop QGIS importer already imports from it. Nothing is added to `@geolibre/core`'s root export.
 - **Units.** CIM widths and marker sizes are points; GeoLibre's are CSS pixels (×96/72). A marker's CIM size is its height, so the circle radius is half of it. Values are rounded to 4 decimal places so `0.75 pt` is written as `1`, not `0.9999999999999999`.
 - **Generated labels.** Pro always writes class labels, so these are rarely used; when a break has none, the label is `lower – upper` with bounds rounded to 12 significant digits (`0.3`, not `0.30000000000000004`).
@@ -77,7 +78,7 @@ The APRX importer's `parseStyle` now just calls `translateCimRenderer` and turns
 ## Summary by CodeRabbit
 
 * **New Features**
-  * ArcGIS Pro imports now preserve more layer styling, including simple symbols, unique-value categories, and graduated color classes.
+  * ArcGIS Pro imports now preserve more layer styling, including single symbols, unique-value categories, and graduated color classes.
   * Import warnings identify unsupported or partially supported symbology and distinguish those issues from layers that could not be loaded.
 * **Bug Fixes**
   * The import dialog reports unloaded-layer counts accurately and shows a symbology-specific message when no layers are unloaded.
@@ -86,6 +87,7 @@ The APRX importer's `parseStyle` now just calls `translateCimRenderer` and turns
 * **Documentation**
   * Updated ArcGIS Pro import guidance with supported styling conversions and known limitations.
 <!-- end of auto-generated comment: release notes by coderabbit.ai -->
+
 
 
 

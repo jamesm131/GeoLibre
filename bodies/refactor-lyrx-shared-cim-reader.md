@@ -1,6 +1,6 @@
 Builds on #3559 (thematic renderers) — review the commits after `dda90cf4`.
 
-Follow-up to #3545, which added `.lyrx` style import with its own CIM reader: colours, symbol layers, markers and dashes, a second copy of what the ArcGIS Pro project importer does. #3559 moves CIM symbology reading into one module, `packages/map/src/arcgis-cim-renderer.ts`. This PR rebuilds `packages/map/src/lyrx-import.ts` on it, so `.lyrx` and `.aprx` files give a layer the same look. `lyrx-import.ts` becomes an adapter (456 → 437 lines, most of it warning sentences and label reading) with no colour, symbol or marker reading of its own.
+Follow-up to #3545, which added `.lyrx` style import with its own CIM reader: colours, symbol layers, markers and dashes, a second copy of what the ArcGIS Pro project importer does. #3559 moves CIM symbology reading into one module, `packages/map/src/cim-renderer.ts`. This PR rebuilds `packages/map/src/lyrx-import.ts` on it, so `.lyrx` and `.aprx` files give a layer the same look. `lyrx-import.ts` becomes an adapter (456 → 437 lines, most of it warning sentences and label reading) with no colour, symbol or marker reading of its own.
 
 ## Summary
 
@@ -30,7 +30,7 @@ Unchanged: renderers GeoLibre cannot draw are refused by name and the layer keep
 3. Labels are read from the first visible label class. The text and halo colours come from the text symbol's polygon symbols through `translateCimSymbol`, so labels use the same colour reader as everything else.
 4. `applyLyrxImport` resets the whole-symbol fields listed above to `DEFAULT_LAYER_STYLE`, which is where the APRX importer starts too, then merges the file's style over the layer.
 
-The first commit moves renderer and symbol reading onto the shared reader (with the reset, and unique values and class breaks); the second adds label size, colour and halo; the third keeps two warnings #3545 had (naming a picture or hatch fill in a refused symbol, and an unreadable label text symbol). This PR changes nothing in `arcgis-cim-renderer.ts`.
+The first commit moves renderer and symbol reading onto the shared reader (with the reset, and unique values and class breaks); the second adds label size, colour and halo; the third keeps two warnings #3545 had (naming a picture or hatch fill in a refused symbol, and an unreadable label text symbol). This PR changes nothing in `cim-renderer.ts`.
 
 ## Design decisions and known limits
 
