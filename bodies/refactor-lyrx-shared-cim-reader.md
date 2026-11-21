@@ -1,12 +1,12 @@
-Builds on #THEMATIC (thematic renderers) — review the commits after `dda90cf4`.
+Builds on #3559 (thematic renderers) — review the commits after `dda90cf4`.
 
-Follow-up to #3545, which added `.lyrx` style import with its own CIM reader: colours, symbol layers, markers and dashes, a second copy of what the ArcGIS Pro project importer does. #THEMATIC moves CIM symbology reading into one module, `packages/map/src/arcgis-cim-renderer.ts`. This PR rebuilds `packages/map/src/lyrx-import.ts` on it, so `.lyrx` and `.aprx` files give a layer the same look. `lyrx-import.ts` becomes an adapter (456 → 437 lines, most of it warning sentences and label reading) with no colour, symbol or marker reading of its own.
+Follow-up to #3545, which added `.lyrx` style import with its own CIM reader: colours, symbol layers, markers and dashes, a second copy of what the ArcGIS Pro project importer does. #3559 moves CIM symbology reading into one module, `packages/map/src/arcgis-cim-renderer.ts`. This PR rebuilds `packages/map/src/lyrx-import.ts` on it, so `.lyrx` and `.aprx` files give a layer the same look. `lyrx-import.ts` becomes an adapter (456 → 437 lines, most of it warning sentences and label reading) with no colour, symbol or marker reading of its own.
 
 ## Summary
 
 What changes for users importing a `.lyrx` through **Layer actions → Styles → Import style from file…**, **Import style from text…** or the plugin API's `importLayerStyle`:
 
-- **Unique values and graduated colours now import**, as rule-based styles with one rule per class, exactly as an `.aprx` import does (#THEMATIC explains the class semantics). Before, every renderer except single symbol was refused. Across 113 public ArcGIS Pro `.lyrx` files, **89 now import, up from 13** (all 13 still import with the same fill and outline colours).
+- **Unique values and graduated colours now import**, as rule-based styles with one rule per class, exactly as an `.aprx` import does (#3559 explains the class semantics). Before, every renderer except single symbol was refused. Across 113 public ArcGIS Pro `.lyrx` files, **89 now import, up from 13** (all 13 still import with the same fill and outline colours).
 - **Label size, colour and halo now import.** A label that is a single field (`[NAME]`, `$feature.NAME` or `$feature["NAME"]`) takes the text size, the text colour and the halo colour and width from the file's text symbol. The "label font, size, colour and halo were not imported" warning is now only about the font, which GeoLibre labels have no setting for.
 - **The symbol replaces the layer's whole symbol.** A CIM symbol describes the symbol in full, so the import now resets the layer's dash, blur, line decorations, fill pattern, inverted fill, icon marker, heat map or cluster renderer, proportional sizing, outline transparency, widths, width unit and circle radius to GeoLibre's defaults before applying the file's values. Before, a layer's own dash, for example, could show through an imported solid line.
 - **The imported label replaces the layer's data-defined label overrides.** Size and colour expressions are cleared where the file sets a size or colour, and opacity and visibility expressions are always cleared, since they would otherwise override or hide what the file shows.
@@ -17,7 +17,7 @@ Unchanged: renderers GeoLibre cannot draw are refused by name and the layer keep
 
 ## Review threads on #3545 this resolves
 
-- **Duplicated `cimColor` / `hsvToRgb`.** Several threads on `lyrx-import.ts` asked for the CIM colour code copied from the APRX importer to be shared, and pointed out that the copies had already drifted (the APRX copy read `null` channels as black). The reply then was that it would move once the shared CIM translator landed. #THEMATIC is that translator and fixes the APRX side; this PR deletes the `.lyrx` copy.
+- **Duplicated `cimColor` / `hsvToRgb`.** Several threads on `lyrx-import.ts` asked for the CIM colour code copied from the APRX importer to be shared, and pointed out that the copies had already drifted (the APRX copy read `null` channels as black). The reply then was that it would move once the shared CIM translator landed. #3559 is that translator and fixes the APRX side; this PR deletes the `.lyrx` copy.
 - **`enable` handling contradicting the APRX reader.** One thread noted that `.lyrx` skipped symbol layers without `enable: true` while the APRX reader ignored the flag. Both now read it in one place, `cimSymbolLayerEnabled`, with absent meaning drawn (see above for why).
 - **No real ArcGIS Pro fixtures.** The real-file run below checks the reader against 113 Pro exports rather than only hand-written CIM.
 
@@ -42,7 +42,7 @@ The first commit moves renderer and symbol reading onto the shared reader (with 
 - **Only the first feature layer** of a multi-layer file is read; the warning names it and says how many there were.
 - **Warnings are English strings from the parser**, like the QML, SLD and Mapbox readers'. No `en.json` strings change.
 - **`simpleStyleEnabled` is left alone**, as in the other three readers and as agreed on #3545.
-- **Unique values on zero or several fields, Arcade expressions, normalised breaks, graduated symbols, exclusion clauses and renderers whose class symbols have no solid colour** are refused, as in #THEMATIC, because a partial translation would draw some classes wrongly.
+- **Unique values on zero or several fields, Arcade expressions, normalised breaks, graduated symbols, exclusion clauses and renderers whose class symbols have no solid colour** are refused, as in #3559, because a partial translation would draw some classes wrongly.
 
 ## Testing
 
@@ -54,5 +54,5 @@ The first commit moves renderer and symbol reading onto the shared reader (with 
 ## Related PRs
 
 - #3545 (merged) added the `.lyrx` import this PR rebuilds.
-- #THEMATIC adds the shared CIM reader this PR is built on, and uses it for `.aprx` / `.mapx` imports.
-- #3553 is the ArcGIS import foundation #THEMATIC builds on; this PR does not touch the project importer.
+- #3559 adds the shared CIM reader this PR is built on, and uses it for `.aprx` / `.mapx` imports.
+- #3553 is the ArcGIS import foundation #3559 builds on; this PR does not touch the project importer.
