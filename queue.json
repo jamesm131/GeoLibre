@@ -44,7 +44,7 @@
         "feat/arcgis-import-foundation",
         "feat/arcgis-thematic-symbology"
       ],
-      "note": "Follow-up to merged #3545. #THEMATIC placeholders replaced with #3559. Still stacked on the old thematic head dda90cf4; feat/arcgis-thematic-symbology was rebased onto main as 63699228, so rebase --onto feat/arcgis-thematic-symbology dda90cf4 (and update the body's `dda90cf4` and #3553 lines) before opening."
+      "note": "Follow-up to merged #3545. #THEMATIC placeholders replaced with #3559. Still stacked on the old thematic head dda90cf4; feat/arcgis-thematic-symbology was rebased onto main as 63699228, so rebase --onto feat/arcgis-thematic-symbology dda90cf4 (and update the body's `dda90cf4` and #3553 lines) before opening. After #3559 review: the CIM reader gained issue code `alternate-symbols` (the .lyrx adapter needs a sentence for it), unique-value filters use `in` instead of `match`, and absent stroke width / marker size read as 0; recheck lyrx tests and the body's 89-of-113 counts after rebasing."
     }
   ],
   "done": [
