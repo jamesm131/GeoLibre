@@ -34,6 +34,8 @@ The `GdbSource.tsx` change is a move, not a rewrite: `listFileGeodatabaseLayers`
 - **No CRS, no layer.** A feature class with no detectable CRS is refused with a warning, the same rule the Add Data GDB source applies, rather than drawing raw projected coordinates as longitude and latitude.
 - **Saved like an Add Data GDB layer.** The placeholder carries `metadata.sourceKind: "gdb"` and `gdbLayer`, so saving embeds the features rather than recording a `.gdb` path that the reopen code cannot read.
 - **Network-share geodatabases** stay refused as `network-path`, the importer's existing rule for UNC paths.
+- **Only local `.gdb` folders are read.** The path comes from the project file, and the desktop sidecar does not confine reads (`GEOLIBRE_CONVERSION_ROOTS` is unset there). A workspace that is not an absolute local folder named `*.gdb`, such as a URL, a GDAL `/vsi*` path or a plain folder, is listed as `file-geodatabase` and never sent to the sidecar.
+- **Unsaved attribute drafts are asked about first.** When the chosen map has geodatabase layers, the discard question comes before the reads rather than after them, and is asked again only if the drafts changed while the reads ran.
 - **Existing `file-geodatabase` warning text is unchanged.** It still suggests Add Data → File Geodatabase in GeoLibre Desktop. The Mac App Store build hides that source, so the hint does not apply there. The string comes from `main` and is out of scope here.
 
 ## Changes from the earlier draft of this branch
@@ -48,7 +50,7 @@ The earlier draft's race test polled without a bound; it is gone, and the hook t
 
 ## Testing
 
-- `node --import tsx --test tests/arcgis-project-import.test.ts`: 38 passed. New cases:
+- `node --import tsx --test tests/arcgis-project-import.test.ts`: 39 passed. New cases:
   - feature classes kept as ordered, grouped, styled placeholders when the option is set, and still reported as `file-geodatabase` by default
   - readable layers filled, a missing geodatabase dropped with its empty group, one listing per geodatabase, case-insensitive name match
   - a layer with no CRS and a failed read each warned and dropped; a sidecar that cannot start reports every layer as unreadable without listing or reading
@@ -56,9 +58,11 @@ The earlier draft's race test polled without a bound; it is gone, and the hook t
   - a map with geodatabase layers, a hosted FeatureServer layer, a grouped raster and vector-tile service, and a file layer: one `layerOrder` across all of them; an unreadable feature class leaves the order with its layer; then, as the hook does, the project is loaded into the store, the raster and services are added on top under new ids in a different order, and one `applyLayerOrder` call gives ArcGIS Pro's order
   - abandoning the import before the reads, during the only read (whether it then succeeds or fails), or during an earlier read rejects without filling any layer
   - a failed geodatabase listing is reported as `file-geodatabase-read`, not `missing-source`
-- `node --import tsx --test tests/component-arcgis-project-import.test.ts`: 8 passed. Two new cases run the real hook as the desktop build does, with Tauri's IPC (file dialog, file reads, sidecar start) and the sidecar's HTTP API stubbed:
+  - only an absolute local folder whose name ends in `.gdb` is read; a plain folder, a URL, a GDAL `/vsicurl/` or `/vsizip/` path and a path with a query stay listed as `file-geodatabase` and never reach the sidecar
+- `node --import tsx --test tests/component-arcgis-project-import.test.ts`: 10 passed. Four new cases run the real hook as the desktop build does, with Tauri's IPC (file dialog, file reads, sidecar start) and the sidecar's HTTP API stubbed:
   - a project with a geodatabase layer, a geodatabase layer whose feature class is gone (in its own group) and a vector-tile service: the readable layer loads with its features and ends up above the service, as in ArcGIS Pro, although the service was added after it; the missing one is reported and its group removed, and the sidecar sees one listing and one read
   - another project opened while the geodatabase is being listed: the replacement keeps no imported layer, is not marked changed, gains no undo step and shows no import report, and the feature class is never read. This test fails if the signal check after the listing is removed.
+  - with unsaved attribute table drafts open, the discard question comes before any sidecar call; cancelling it leaves the project as it was with no listing or read, and agreeing asks only once
 - The import base's tests (`tests/apply-layer-order.test.ts`, `tests/project-import-session.test.ts`, `tests/layer-groups.test.ts`, `tests/arcgis-project-feature-service-desktop.test.ts`, `tests/component-raster-add-signal.test.ts`, `tests/component-cog-raster-handler.test.ts`), `tests/component-shared-save-back.test.ts` and `tests/i18n*.test.ts` all pass.
 - `npx eslint` on the changed files, `npm run typecheck:fast`, `npm run typecheck`, `npm run typecheck:tests` (0 errors), `git diff --check`: all clean. The full `npm run test:frontend` suite passes locally after the rebase except one unrelated case in `tests/stac-render-tiles.test.ts`, which fails on macOS with a localhost `ECONNRESET` from its test server; this branch does not touch STAC code. No sidecar code changed, so the backend suite is unaffected. `oxfmt@0.59.0 --check` is clean on the changed code and tests; `docs/features.md` and `docs/user-guide/projects.md` were already unformatted on `main` and are left as they were.
 
