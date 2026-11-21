@@ -33,7 +33,7 @@ The `GdbSource.tsx` change is a move, not a rewrite: `listFileGeodatabaseLayers`
 - **Feature-class name matching.** GDAL's OpenFileGDB driver keeps the feature class's case, while ArcGIS stores the dataset name as typed in the connection, so the name is matched exactly first and then case-insensitively. The listing's spelling is what gets read and saved.
 - **No CRS, no layer.** A feature class with no detectable CRS is refused with a warning, the same rule the Add Data GDB source applies, rather than drawing raw projected coordinates as longitude and latitude.
 - **Saved like an Add Data GDB layer.** The placeholder carries `metadata.sourceKind: "gdb"` and `gdbLayer`, so saving embeds the features rather than recording a `.gdb` path that the reopen code cannot read.
-- **Network-share geodatabases** stay refused as `network-path`, the importer's existing rule for UNC paths.
+- **Network-share geodatabases** stay refused as `network-path`, the importer's existing rule for UNC paths. So does a relative geodatabase in a project opened from a network share, which path normalisation would otherwise turn into a rooted local path.
 - **Only local `.gdb` folders are read.** The path comes from the project file, and the desktop sidecar does not confine reads (`GEOLIBRE_CONVERSION_ROOTS` is unset there). A workspace that is not an absolute local folder named `*.gdb`, such as a URL, a GDAL `/vsi*` path or a plain folder, is listed as `file-geodatabase` and never sent to the sidecar. Any local geodatabase the map names is read, wherever it is on disk, as with the importer's other local sources; the user guide says so and suggests checking the Layers panel before saving a project imported from someone else's `.aprx`.
 - **Unsaved attribute drafts are asked about first.** When the chosen map has geodatabase layers, the discard question comes before the reads rather than after them, and is asked again only if the drafts changed while the reads ran.
 - **Existing `file-geodatabase` warning text is unchanged.** It still suggests Add Data → File Geodatabase in GeoLibre Desktop. The Mac App Store build hides that source, so the hint does not apply there. The string comes from `main` and is out of scope here.
@@ -50,7 +50,7 @@ The earlier draft's race test polled without a bound; it is gone, and the hook t
 
 ## Testing
 
-- `node --import tsx --test tests/arcgis-project-import.test.ts`: 41 passed. New cases:
+- `node --import tsx --test tests/arcgis-project-import.test.ts`: 42 passed. New cases:
   - feature classes kept as ordered, grouped, styled placeholders when the option is set, and still reported as `file-geodatabase` by default
   - readable layers filled, a missing geodatabase dropped with its empty group, one listing per geodatabase, case-insensitive name match
   - a layer with no CRS and a failed read each warned and dropped; a sidecar that cannot start reports every layer as unreadable without listing or reading
