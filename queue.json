@@ -21,8 +21,9 @@
       "dependsOn": [
         "feat/arcgis-import-foundation"
       ],
-      "note": "2026-11-22: thread rebasing onto main (after #3553 squash merge), opening the PR, and filling #THEMATIC in the lyrx body.",
-      "opening": "mcp:launch:3da29eac9d7a95b6b560a4f9637b2241884ee3890107803e32bd19881d338407"
+      "note": "2026-11-22: opened as #3559 after rebasing onto main (head 63699228, was dda90cf4).",
+      "opening": "mcp:launch:3da29eac9d7a95b6b560a4f9637b2241884ee3890107803e32bd19881d338407",
+      "number": 3559
     }
   ],
   "queued": [
@@ -43,7 +44,7 @@
         "feat/arcgis-import-foundation",
         "feat/arcgis-thematic-symbology"
       ],
-      "note": "Follow-up to merged #3545. Body has #THEMATIC placeholders: replace with the thematic PR number before opening."
+      "note": "Follow-up to merged #3545. #THEMATIC placeholders replaced with #3559. Still stacked on the old thematic head dda90cf4; feat/arcgis-thematic-symbology was rebased onto main as 63699228, so rebase --onto feat/arcgis-thematic-symbology dda90cf4 (and update the body's `dda90cf4` and #3553 lines) before opening."
     }
   ],
   "done": [
