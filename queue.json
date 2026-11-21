@@ -11,7 +11,8 @@
         "feat/arcgis-import-foundation"
       ],
       "note": "2026-11-22: thread rebasing onto main (after #3553 squash merge) and opening the PR.",
-      "opening": "mcp:launch:0dba86459be1dd637051fb63c7655a89cab899aa62b97d415e2cb0c2468eac35"
+      "opening": "mcp:launch:0dba86459be1dd637051fb63c7655a89cab899aa62b97d415e2cb0c2468eac35",
+      "number": 3558
     },
     {
       "branch": "feat/arcgis-thematic-symbology",
