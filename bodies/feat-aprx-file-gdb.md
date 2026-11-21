@@ -34,7 +34,7 @@ The `GdbSource.tsx` change is a move, not a rewrite: `listFileGeodatabaseLayers`
 - **No CRS, no layer.** A feature class with no detectable CRS is refused with a warning, the same rule the Add Data GDB source applies, rather than drawing raw projected coordinates as longitude and latitude.
 - **Saved like an Add Data GDB layer.** The placeholder carries `metadata.sourceKind: "gdb"` and `gdbLayer`, so saving embeds the features rather than recording a `.gdb` path that the reopen code cannot read.
 - **Network-share geodatabases** stay refused as `network-path`, the importer's existing rule for UNC paths.
-- **Only local `.gdb` folders are read.** The path comes from the project file, and the desktop sidecar does not confine reads (`GEOLIBRE_CONVERSION_ROOTS` is unset there). A workspace that is not an absolute local folder named `*.gdb`, such as a URL, a GDAL `/vsi*` path or a plain folder, is listed as `file-geodatabase` and never sent to the sidecar.
+- **Only local `.gdb` folders are read.** The path comes from the project file, and the desktop sidecar does not confine reads (`GEOLIBRE_CONVERSION_ROOTS` is unset there). A workspace that is not an absolute local folder named `*.gdb`, such as a URL, a GDAL `/vsi*` path or a plain folder, is listed as `file-geodatabase` and never sent to the sidecar. Any local geodatabase the map names is read, wherever it is on disk, as with the importer's other local sources; the user guide says so and suggests checking the Layers panel before saving a project imported from someone else's `.aprx`.
 - **Unsaved attribute drafts are asked about first.** When the chosen map has geodatabase layers, the discard question comes before the reads rather than after them, and is asked again only if the drafts changed while the reads ran.
 - **Existing `file-geodatabase` warning text is unchanged.** It still suggests Add Data → File Geodatabase in GeoLibre Desktop. The Mac App Store build hides that source, so the hint does not apply there. The string comes from `main` and is out of scope here.
 
@@ -50,7 +50,7 @@ The earlier draft's race test polled without a bound; it is gone, and the hook t
 
 ## Testing
 
-- `node --import tsx --test tests/arcgis-project-import.test.ts`: 39 passed. New cases:
+- `node --import tsx --test tests/arcgis-project-import.test.ts`: 40 passed. New cases:
   - feature classes kept as ordered, grouped, styled placeholders when the option is set, and still reported as `file-geodatabase` by default
   - readable layers filled, a missing geodatabase dropped with its empty group, one listing per geodatabase, case-insensitive name match
   - a layer with no CRS and a failed read each warned and dropped; a sidecar that cannot start reports every layer as unreadable without listing or reading
@@ -58,6 +58,7 @@ The earlier draft's race test polled without a bound; it is gone, and the hook t
   - a map with geodatabase layers, a hosted FeatureServer layer, a grouped raster and vector-tile service, and a file layer: one `layerOrder` across all of them; an unreadable feature class leaves the order with its layer; then, as the hook does, the project is loaded into the store, the raster and services are added on top under new ids in a different order, and one `applyLayerOrder` call gives ArcGIS Pro's order
   - abandoning the import before the reads, during the only read (whether it then succeeds or fails), or during an earlier read rejects without filling any layer
   - a failed geodatabase listing is reported as `file-geodatabase-read`, not `missing-source`
+  - an abandoned listing is not logged as a failed read
   - only an absolute local folder whose name ends in `.gdb` is read; a plain folder, a URL, a GDAL `/vsicurl/` or `/vsizip/` path and a path with a query stay listed as `file-geodatabase` and never reach the sidecar
 - `node --import tsx --test tests/component-arcgis-project-import.test.ts`: 12 passed. Six new cases run the real hook as the desktop build does, with Tauri's IPC (file dialog, file reads, sidecar start) and the sidecar's HTTP API stubbed:
   - a project with a geodatabase layer, a geodatabase layer whose feature class is gone (in its own group) and a vector-tile service: the readable layer loads with its features and ends up above the service, as in ArcGIS Pro, although the service was added after it; the missing one is reported and its group removed, and the sidecar sees one listing and one read
