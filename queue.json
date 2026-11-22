@@ -4,37 +4,14 @@
   "base": "main",
   "open": [
     {
-      "branch": "feat/aprx-file-gdb",
-      "title": "feat(arcgis): load File Geodatabase layers from ArcGIS Pro projects on desktop",
-      "body": "bodies/feat-aprx-file-gdb.md",
-      "dependsOn": [
-        "feat/arcgis-import-foundation"
-      ],
-      "note": "2026-11-22: thread rebasing onto main (after #3553 squash merge) and opening the PR.",
-      "opening": "mcp:launch:0dba86459be1dd637051fb63c7655a89cab899aa62b97d415e2cb0c2468eac35",
-      "number": 3558
-    },
-    {
-      "branch": "feat/arcgis-thematic-symbology",
-      "title": "feat(arcgis): import unique value and class breaks renderers as exact rules",
-      "body": "bodies/feat-arcgis-thematic-symbology.md",
-      "dependsOn": [
-        "feat/arcgis-import-foundation"
-      ],
-      "note": "2026-11-22: opened as #3559 after rebasing onto main. Review rounds done: head 39f3c74e, all 26 checks green, CodeRabbit approved, all threads resolved; waiting on maintainer review.",
-      "opening": "mcp:launch:3da29eac9d7a95b6b560a4f9637b2241884ee3890107803e32bd19881d338407",
-      "number": 3559
-    }
-  ],
-  "queued": [
-    {
       "branch": "feat/aprx-repair-workspaces",
       "title": "feat(arcgis): locate moved folders for unresolved ArcGIS Pro project layers",
       "body": "bodies/feat-aprx-repair-workspaces.md",
       "dependsOn": [
         "feat/arcgis-import-foundation"
       ],
-      "note": "Still on the old #3553 base (b277d104); #3553 was squash-merged, so rebase --onto origin/main b45a0ec5 before opening."
+      "note": "Still on the old #3553 base (b277d104); #3553 was squash-merged, so rebase --onto origin/main b45a0ec5 before opening. 2026-11-23: thread launched to rebase onto main and open the PR.",
+      "opening": "mcp:launch:7587cd06e8dde643806ad3bfd4cd89a101ff835ac79b8d4881d9ee80a0a122df"
     },
     {
       "branch": "refactor/lyrx-shared-cim-reader",
@@ -44,9 +21,11 @@
         "feat/arcgis-import-foundation",
         "feat/arcgis-thematic-symbology"
       ],
-      "note": "Follow-up to merged #3545. #THEMATIC placeholders replaced with #3559. Still stacked on the old thematic head dda90cf4; feat/arcgis-thematic-symbology was rebased onto main as 63699228, so rebase --onto feat/arcgis-thematic-symbology dda90cf4 (and update the body's `dda90cf4` and #3553 lines) before opening. After #3559 review: the CIM reader gained issue code `alternate-symbols` (the .lyrx adapter needs a sentence for it), unique-value filters use `in` instead of `match`, and absent stroke width / marker size read as 0; recheck lyrx tests and the body's 89-of-113 counts after rebasing. #3559 also renamed packages/map/src/arcgis-cim-renderer.ts to cim-renderer.ts (body updated; the branch's code and the test file name may still refer to the old path), and its QML fallback only fires for skipped rules the map draws."
+      "note": "Follow-up to merged #3545. #THEMATIC placeholders replaced with #3559. Still stacked on the old thematic head dda90cf4; feat/arcgis-thematic-symbology was rebased onto main as 63699228, so rebase --onto feat/arcgis-thematic-symbology dda90cf4 (and update the body's `dda90cf4` and #3553 lines) before opening. After #3559 review: the CIM reader gained issue code `alternate-symbols` (the .lyrx adapter needs a sentence for it), unique-value filters use `in` instead of `match`, and absent stroke width / marker size read as 0; recheck lyrx tests and the body's 89-of-113 counts after rebasing. #3559 also renamed packages/map/src/arcgis-cim-renderer.ts to cim-renderer.ts (body updated; the branch's code and the test file name may still refer to the old path), and its QML fallback only fires for skipped rules the map draws. 2026-11-23: #3559 merged; thread launched to rebase onto main, apply the #3559 follow-ups and open the PR.",
+      "opening": "mcp:launch:4e80196083bcd7e7a09c8335a9be30806965aa3c3b0c21f0673a798da1361d56"
     }
   ],
+  "queued": [],
   "done": [
     {
       "number": 3544,
@@ -85,6 +64,22 @@
       "note": "Squash-merged as 7fc94a3c after giswqs added review-fix commits; stacked branches need rebase --onto origin/main.",
       "state": "merged",
       "date": "2026-11-21"
+    },
+    {
+      "number": 3558,
+      "branch": "feat/aprx-file-gdb",
+      "title": "feat(arcgis): load File Geodatabase layers from ArcGIS Pro projects on desktop",
+      "state": "merged",
+      "date": "2026-11-22",
+      "note": "Merged 2026-11-22 at head f15cf596 (merge 713c144f)."
+    },
+    {
+      "number": 3559,
+      "branch": "feat/arcgis-thematic-symbology",
+      "title": "feat(arcgis): import unique value and class breaks renderers as exact rules",
+      "state": "merged",
+      "date": "2026-11-22",
+      "note": "Merged 2026-11-22 at head 6efb20c4 (merge bb3b8ca8)."
     }
   ]
 }
