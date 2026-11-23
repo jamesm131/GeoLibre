@@ -2,29 +2,7 @@
   "upstream": "opengeos/GeoLibre",
   "fork": "jamesm131/GeoLibre",
   "base": "main",
-  "open": [
-    {
-      "branch": "feat/aprx-repair-workspaces",
-      "title": "feat(arcgis): locate moved folders for unresolved ArcGIS Pro project layers",
-      "body": "bodies/feat-aprx-repair-workspaces.md",
-      "dependsOn": [
-        "feat/arcgis-import-foundation"
-      ],
-      "note": "Still on the old #3553 base (b277d104); #3553 was squash-merged, so rebase --onto origin/main b45a0ec5 before opening. 2026-11-23: thread launched to rebase onto main and open the PR.",
-      "opening": "mcp:launch:7587cd06e8dde643806ad3bfd4cd89a101ff835ac79b8d4881d9ee80a0a122df"
-    },
-    {
-      "branch": "refactor/lyrx-shared-cim-reader",
-      "title": "refactor(style): build .lyrx import on the shared CIM reader",
-      "body": "bodies/refactor-lyrx-shared-cim-reader.md",
-      "dependsOn": [
-        "feat/arcgis-import-foundation",
-        "feat/arcgis-thematic-symbology"
-      ],
-      "note": "Follow-up to merged #3545. #THEMATIC placeholders replaced with #3559. Still stacked on the old thematic head dda90cf4; feat/arcgis-thematic-symbology was rebased onto main as 63699228, so rebase --onto feat/arcgis-thematic-symbology dda90cf4 (and update the body's `dda90cf4` and #3553 lines) before opening. After #3559 review: the CIM reader gained issue code `alternate-symbols` (the .lyrx adapter needs a sentence for it), unique-value filters use `in` instead of `match`, and absent stroke width / marker size read as 0; recheck lyrx tests and the body's 89-of-113 counts after rebasing. #3559 also renamed packages/map/src/arcgis-cim-renderer.ts to cim-renderer.ts (body updated; the branch's code and the test file name may still refer to the old path), and its QML fallback only fires for skipped rules the map draws. 2026-11-23: #3559 merged; thread launched to rebase onto main, apply the #3559 follow-ups and open the PR.",
-      "opening": "mcp:launch:4e80196083bcd7e7a09c8335a9be30806965aa3c3b0c21f0673a798da1361d56"
-    }
-  ],
+  "open": [],
   "queued": [],
   "done": [
     {
@@ -80,6 +58,22 @@
       "state": "merged",
       "date": "2026-11-22",
       "note": "Merged 2026-11-22 at head 6efb20c4 (merge bb3b8ca8)."
+    },
+    {
+      "number": 3581,
+      "branch": "feat/aprx-repair-workspaces",
+      "title": "feat(arcgis): locate moved folders for unresolved ArcGIS Pro project layers",
+      "state": "merged",
+      "date": "2026-11-23",
+      "note": "Merged 2026-11-23 at fork head c7e17040."
+    },
+    {
+      "number": 3582,
+      "branch": "refactor/lyrx-shared-cim-reader",
+      "title": "refactor(style): build .lyrx import on the shared CIM reader",
+      "state": "merged",
+      "date": "2026-11-23",
+      "note": "Merged 2026-11-23 at fork head bc5e8daa."
     }
   ]
 }
